@@ -123,6 +123,7 @@ EduBridge focuses on solving one major problem faced by millions of students: la
 ├── tailwind.config.js
 ├── vite.config.ts
 └── README.md
+```
 Installation & Setup
 Prerequisites
 Node.js ≥ 20
