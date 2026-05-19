@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Timer, CheckCircle2, XCircle, ChevronRight, RotateCcw } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { toast } from 'sonner';
+import { Confetti } from '@/components/common/Confetti';
 
 interface Question {
   id: number;
@@ -62,6 +63,7 @@ export default function Quiz() {
   const [answers, setAnswers] = useState<(number | null)[]>(new Array(5).fill(null));
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [isFinished, setIsFinished] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     if (timeLeft > 0 && !isFinished) {
@@ -95,6 +97,11 @@ export default function Quiz() {
         score: score as number,
         total: mockQuestions.length
       });
+      const percent = (score / mockQuestions.length) * 100;
+      if (percent >= 80) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 100);
+      }
     }
   };
 
@@ -116,6 +123,7 @@ export default function Quiz() {
   if (isFinished) {
     return (
       <Layout>
+        <Confetti show={showConfetti} />
         <div className="max-w-3xl mx-auto py-8 space-y-8">
           <Card className="text-center border-none shadow-xl bg-primary text-primary-foreground p-8">
             <h2 className="text-4xl font-bold mb-2">Quiz Completed!</h2>

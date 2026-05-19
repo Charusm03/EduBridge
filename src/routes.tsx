@@ -4,6 +4,7 @@ import StudyPlan from './pages/StudyPlan';
 import AITutor from './pages/AITutor';
 import Quiz from './pages/Quiz';
 import ProgressDashboard from './pages/ProgressDashboard';
+import TeacherDashboard from './pages/TeacherDashboard';
 import type { ReactNode } from 'react';
 
 export interface RouteConfig {
@@ -50,6 +51,12 @@ export const routes: RouteConfig[] = [
     name: 'Progress',
     path: '/progress',
     element: <ProgressDashboard />,
+    public: true,
+  },
+  {
+    name: 'Teacher Dashboard',
+    path: '/teacher',
+    element: <TeacherDashboard />,
     public: true,
   },
 ];

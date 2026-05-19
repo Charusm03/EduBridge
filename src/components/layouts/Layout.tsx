@@ -3,6 +3,7 @@ import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { Header } from './Header';
 import { ReviewAlert } from '../common/ReviewAlert';
+import { HelpButton } from '../common/HelpButton';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 
@@ -47,6 +48,8 @@ export function Layout({ children }: LayoutProps) {
       <div className="md:hidden">
         <BottomNav />
       </div>
+
+      <HelpButton />
     </div>
   );
 }

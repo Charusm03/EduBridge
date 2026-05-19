@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Send, GraduationCap, User, Sparkles } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Send, GraduationCap, User, Sparkles, Mic, MicOff } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { ChatMessage } from '@/types/types';
 
@@ -16,14 +17,71 @@ const suggestions = [
   "Difference between DNA and RNA",
 ];
 
+const languages = [
+  { code: 'en-US', name: 'English' },
+  { code: 'hi-IN', name: 'Hindi' },
+  { code: 'ta-IN', name: 'Tamil' },
+  { code: 'te-IN', name: 'Telugu' },
+  { code: 'fr-FR', name: 'French' },
+  { code: 'es-ES', name: 'Spanish' },
+];
+
+// SpeechRecognition types
+interface SpeechRecognitionEvent {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  [index: number]: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognitionResult {
+  [index: number]: SpeechRecognitionAlternative;
+  isFinal: boolean;
+  length: number;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onend: (() => void) | null;
+  onerror: ((event: any) => void) | null;
+}
+
 export default function AITutor() {
   const { chatHistory, addChatMessage } = useAppStore();
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [socraticStage, setSocraticStage] = useState(0); // 0: None, 1: Waiting for initial knowledge, 2: Waiting for guiding answers
+  const [socraticStage, setSocraticStage] = useState(0);
   const [currentTopic, setCurrentTopic] = useState('');
   const [socraticMode, setSocraticMode] = useState(true);
+  const [isListening, setIsListening] = useState(false);
+  const [selectedLang, setSelectedLang] = useState('en-US');
+  const [hasSpeechSupport, setHasSpeechSupport] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setHasSpeechSupport(true);
+      recognitionRef.current = new SpeechRecognition();
+      if (recognitionRef.current) {
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -42,6 +100,29 @@ export default function AITutor() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
     addChatMessage(aiMsg);
+  };
+
+  const handleMicToggle = () => {
+    if (!recognitionRef.current) return;
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.lang = selectedLang;
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(prev => prev + (prev ? ' ' : '') + transcript);
+      };
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+      recognitionRef.current.onerror = () => {
+        setIsListening(false);
+      };
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
   };
 
   const handleSend = (text: string) => {
@@ -187,23 +268,56 @@ export default function AITutor() {
               ))}
             </div>
             
-            <form 
-              className="flex gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSend(input);
-              }}
-            >
-              <Input 
-                placeholder="Type your question..." 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="rounded-full px-6 h-12"
-              />
-              <Button type="submit" size="icon" className="rounded-full h-12 w-12 shrink-0">
-                <Send className="h-5 w-5" />
-              </Button>
-            </form>
+            <div className="space-y-2">
+              {isListening && (
+                <div className="flex items-center gap-2 text-sm text-red-500 font-medium px-2">
+                  <Mic className="h-4 w-4 animate-pulse" />
+                  Listening…
+                </div>
+              )}
+              <form 
+                className="flex flex-col md:flex-row gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend(input);
+                }}
+              >
+                <div className="flex gap-2 shrink-0">
+                  {hasSpeechSupport && (
+                    <Button
+                      type="button"
+                      variant={isListening ? "destructive" : "ghost"}
+                      size="icon"
+                      onClick={handleMicToggle}
+                      className="rounded-full h-12 w-12 shrink-0 border"
+                    >
+                      {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                    </Button>
+                  )}
+                  <Select value={selectedLang} onValueChange={setSelectedLang}>
+                    <SelectTrigger className="w-[100px] md:w-[140px] h-12 rounded-full shrink-0">
+                      <SelectValue placeholder="Lang" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {languages.map(lang => (
+                        <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-2 flex-1 min-w-0">
+                  <Input 
+                    placeholder="Type your question..." 
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="rounded-full px-6 h-12 flex-1 min-w-0"
+                  />
+                  <Button type="submit" size="icon" className="rounded-full h-12 w-12 shrink-0">
+                    <Send className="h-5 w-5" />
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
         </Card>
       </div>

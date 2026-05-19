@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layouts/Layout";
-import { GraduationCap, BookOpen, MessageSquare, LineChart, ArrowRight } from "lucide-react";
+import { GraduationCap, BookOpen, MessageSquare, LineChart, ArrowRight, ClipboardList, Bot, CalendarDays, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +32,33 @@ export default function Home() {
       icon: LineChart,
       color: "text-purple-600",
       bg: "bg-purple-50",
+    },
+  ];
+
+  const howItWorks = [
+    {
+      step: 1,
+      title: "Enter your subject",
+      description: "Tell us what you want to learn and your current level.",
+      icon: ClipboardList,
+    },
+    {
+      step: 2,
+      title: "Get your AI plan",
+      description: "Our system builds a custom 7-day study roadmap for you.",
+      icon: Bot,
+    },
+    {
+      step: 3,
+      title: "Study daily",
+      description: "Follow your plan, complete topics, and build a streak.",
+      icon: CalendarDays,
+    },
+    {
+      step: 4,
+      title: "Track mastery",
+      description: "Monitor memory health and celebrate every achievement.",
+      icon: Trophy,
     },
   ];
 
@@ -77,6 +104,28 @@ export default function Home() {
               {profile ? "Continue Learning" : "Start Learning"}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold text-center">How it works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {howItWorks.map((item, index) => (
+              <div key={index} className="relative flex flex-col items-center text-center p-6">
+                {index < howItWorks.length - 1 && (
+                  <div className="hidden md:block absolute top-12 right-0 w-1/2 h-0.5 bg-border translate-x-1/2" />
+                )}
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 z-10">
+                  <item.icon className="h-8 w-8 text-primary" />
+                </div>
+                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold mb-3">
+                  {item.step}
+                </div>
+                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+              </div>
+            ))}
           </div>
         </section>
 

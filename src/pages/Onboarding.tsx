@@ -14,8 +14,9 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { useAppStore } from '@/store/useAppStore';
-import { StudentProfile, StudyDay } from '@/types/types';
+import { StudentProfile } from '@/types/types';
 import { toast } from 'sonner';
+import { generateStudyPlan } from '@/services/planGenerator';
 
 const subjects = [
   'Mathematics', 'Physics', 'Chemistry', 'Biology', 
@@ -28,7 +29,14 @@ const grades = [
   'Undergraduate', 'Other'
 ];
 
-import { generateStudyPlan } from '@/services/planGenerator';
+const goalPresets = [
+  { label: 'Custom', value: '' },
+  { label: 'Board Exam', value: 'Board Exam' },
+  { label: 'School Test', value: 'School Test' },
+  { label: 'Olympiad Prep', value: 'Olympiad Prep' },
+  { label: 'Competitive Exam', value: 'Competitive Exam' },
+  { label: 'General Revision', value: 'General Revision' },
+];
 
 export default function Onboarding() {
   const navigate = useNavigate();
@@ -119,10 +127,35 @@ export default function Onboarding() {
 
               <div className="space-y-2">
                 <Label htmlFor="goal">Study Goal</Label>
+                <Select
+                  value={goalPresets.find(g => g.value === formData.goal)?.label || 'Custom'}
+                  onValueChange={(label) => {
+                    const preset = goalPresets.find(g => g.label === label);
+                    if (preset) {
+                      setFormData({ ...formData, goal: preset.value });
+                      // Auto-set target date for Board Exam (suggest next March 15)
+                      if (preset.value === 'Board Exam') {
+                        const now = new Date();
+                        const year = now.getMonth() > 3 ? now.getFullYear() + 1 : now.getFullYear();
+                        const marchDate = new Date(year, 2, 15); // March 15
+                        setFormData(prev => ({ ...prev, goal: preset.value, targetDate: marchDate.toISOString().split('T')[0] }));
+                      }
+                    }
+                  }}
+                >
+                  <SelectTrigger id="goal">
+                    <SelectValue placeholder="Select a study goal" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {goalPresets.map((preset) => (
+                      <SelectItem key={preset.label} value={preset.label}>{preset.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Textarea 
-                  id="goal" 
-                  placeholder="e.g. Pass my board exam in 30 days"
-                  className="min-h-[100px]"
+                  id="goal-custom" 
+                  placeholder="Describe your goal..."
+                  className="min-h-[80px]"
                   value={formData.goal}
                   onChange={(e) => setFormData({...formData, goal: e.target.value})}
                 />

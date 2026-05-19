@@ -16,12 +16,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConceptMap } from "@/components/common/ConceptMap";
 import { LayoutDashboard, Map as MapIcon, AlertCircle } from "lucide-react";
 import { ReviewAlert } from "@/components/common/ReviewAlert";
+import { Confetti } from "@/components/common/Confetti";
 
 export default function StudyPlan() {
   const { profile, studyPlan, toggleDayCompletion, streak, setStudyPlan, reviews } = useAppStore();
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("list");
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
@@ -79,6 +81,7 @@ export default function StudyPlan() {
 
   return (
     <Layout>
+      <Confetti show={showConfetti} />
       <div className="space-y-8 py-6">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -181,7 +184,13 @@ export default function StudyPlan() {
                       </div>
                       <Checkbox 
                         checked={day.completed}
-                        onCheckedChange={() => toggleDayCompletion(day.dayNumber)}
+                        onCheckedChange={() => {
+                          if (!day.completed) {
+                            setShowConfetti(true);
+                            setTimeout(() => setShowConfetti(false), 100);
+                          }
+                          toggleDayCompletion(day.dayNumber);
+                        }}
                         onClick={(e) => e.stopPropagation()}
                         className="h-6 w-6 border-2"
                       />

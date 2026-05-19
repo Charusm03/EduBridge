@@ -22,7 +22,9 @@ import {
   Calendar,
   Share2,
   BrainCircuit,
-  RotateCcw
+  RotateCcw,
+  GraduationCap,
+  Link as LinkIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -68,6 +70,20 @@ export default function ProgressDashboard() {
     const text = `I've completed ${completedDays} days of ${profile?.subject || ''} study with EduBridge! 🎯 Average quiz score: ${averageScore}%. Join me!`;
     navigator.clipboard.writeText(text);
     toast.success("Progress summary copied to clipboard!");
+  };
+
+  const handleShareWithTeacher = () => {
+    const shareData = {
+      profile: profile || { name: '', subject: '', grade: '', goal: '' },
+      studyPlan: studyPlan || [],
+      quizScores: quizScores.slice(-7),
+      memoryHealth: memoryHealth.slice(-10),
+      streak
+    };
+    const encoded = btoa(JSON.stringify(shareData));
+    const url = `${window.location.origin}/teacher?d=${encoded}`;
+    navigator.clipboard.writeText(url);
+    toast.success("Link copied! Share this with your teacher or parent.");
   };
 
   const chartData = quizScores.slice(-7).map((score, i) => ({
@@ -128,10 +144,16 @@ export default function ProgressDashboard() {
               <p className="text-muted-foreground">Detailed overview of your learning journey</p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleShare} className="gap-2">
-            <Share2 className="h-4 w-4" />
-            Share Progress
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleShareWithTeacher} className="gap-2">
+              <LinkIcon className="h-4 w-4" />
+              Share with Teacher
+            </Button>
+            <Button variant="outline" onClick={handleShare} className="gap-2">
+              <Share2 className="h-4 w-4" />
+              Share Progress
+            </Button>
+          </div>
         </div>
 
         {/* Motivational Banner */}
