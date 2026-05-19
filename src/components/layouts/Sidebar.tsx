@@ -1,5 +1,5 @@
 import { NavLink, Link } from 'react-router-dom';
-import { Home, BookOpen, MessageSquare, PenTool, BarChart3, GraduationCap } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, PenTool, BarChart3, GraduationCap, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/store/useAppStore';
 
@@ -9,6 +9,7 @@ const navItems = [
   { icon: MessageSquare, label: 'AI Tutor', href: '/tutor' },
   { icon: PenTool, label: 'Quiz', href: '/quiz' },
   { icon: BarChart3, label: 'Progress', href: '/progress' },
+  { icon: Users, label: 'Teacher View', href: '/teacher' },
 ];
 
 export function Sidebar() {

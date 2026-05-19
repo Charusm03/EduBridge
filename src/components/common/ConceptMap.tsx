@@ -3,7 +3,7 @@ import { StudyDay } from '@/types/types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ZoomIn, ZoomOut, Clock, Target, ArrowRight } from 'lucide-react';
+import { ZoomIn, ZoomOut, Clock, Target, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ConceptMapProps {
@@ -14,6 +14,14 @@ interface ConceptMapProps {
 export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
   const [zoom, setZoom] = useState(1);
   const [selectedDay, setSelectedDay] = useState<StudyDay | null>(null);
+
+  if (!plan || plan.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+        No study plan available to visualize.
+      </div>
+    );
+  }
 
   const currentDay = useMemo(() => {
     return plan.find(day => !day.completed) || plan[plan.length - 1];
@@ -40,6 +48,8 @@ export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
     }
   };
 
+  const svgWidth = startX + plan.length * (nodeWidth + gapX);
+
   return (
     <div className="relative border rounded-xl bg-muted/30 overflow-hidden h-[450px]">
       {/* Zoom Controls */}
@@ -55,7 +65,7 @@ export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
       <div className="w-full h-full overflow-auto p-8">
         <div 
           style={{ 
-            width: `${(startX + plan.length * (nodeWidth + gapX)) * zoom}px`,
+            width: `${svgWidth * zoom}px`,
             height: '100%',
             transform: `scale(${zoom})`,
             transformOrigin: 'top left',
@@ -63,29 +73,29 @@ export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
           }}
           className="relative"
         >
-          <svg width={startX + plan.length * (nodeWidth + gapX)} height={400} className="overflow-visible">
+          <svg width={svgWidth} height={400} className="overflow-visible">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                refX="0" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+              </marker>
+            </defs>
+
             {/* Arrows */}
             {nodes.map((node, i) => {
               if (i === nodes.length - 1) return null;
               const next = nodes[i + 1];
               return (
-                <g key={`arrow-${i}`}>
-                  <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
-                    refX="0" refY="3.5" orient="auto">
-                      <polygon points="0 0, 10 3.5, 0 7" fill="#cbd5e1" />
-                    </marker>
-                  </defs>
-                  <line 
-                    x1={node.x + nodeWidth} 
-                    y1={node.y + nodeHeight / 2} 
-                    x2={next.x - 10} 
-                    y2={next.y + nodeHeight / 2} 
-                    stroke="#cbd5e1" 
-                    strokeWidth="2" 
-                    markerEnd="url(#arrowhead)" 
-                  />
-                </g>
+                <line 
+                  key={`arrow-${i}`}
+                  x1={node.x + nodeWidth} 
+                  y1={node.y + nodeHeight / 2} 
+                  x2={next.x - 10} 
+                  y2={next.y + nodeHeight / 2} 
+                  stroke="#94a3b8" 
+                  strokeWidth="2" 
+                  markerEnd="url(#arrowhead)" 
+                />
               );
             })}
 
@@ -109,7 +119,7 @@ export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
                       height={nodeHeight + 8}
                       rx={14}
                       fill="none"
-                      stroke="#3b82f6"
+                      stroke="hsl(var(--primary))"
                       strokeWidth="3"
                       className="animate-pulse"
                       style={{ filter: 'blur(4px)' }}
@@ -122,8 +132,8 @@ export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
                     width={nodeWidth}
                     height={nodeHeight}
                     rx={12}
-                    fill={isCompleted ? '#f8fafc' : 'white'}
-                    stroke={isActive ? '#3b82f6' : '#e2e8f0'}
+                    fill="hsl(var(--card))"
+                    stroke={isActive ? 'hsl(var(--primary))' : 'hsl(var(--border))'}
                     strokeWidth="2"
                     className="transition-all group-hover:shadow-md"
                   />
@@ -141,16 +151,32 @@ export function ConceptMap({ plan, onSelectDay }: ConceptMapProps) {
                   <text 
                     x={node.x + 12} 
                     y={node.y + 30} 
-                    className="text-[10px] font-bold uppercase tracking-wider fill-muted-foreground"
+                    fill="hsl(var(--muted-foreground))"
+                    className="text-[10px] font-bold uppercase tracking-wider"
                   >
                     Day {node.dayNumber}
                   </text>
                   
-                  <foreignObject x={node.x + 12} y={node.y + 35} width={nodeWidth - 24} height={40}>
-                    <div className="text-xs font-semibold leading-tight line-clamp-2">
-                      {node.topics[0]}
-                    </div>
-                  </foreignObject>
+                  <text
+                    x={node.x + 12}
+                    y={node.y + 50}
+                    fill="hsl(var(--foreground))"
+                    className="text-xs font-semibold leading-tight"
+                  >
+                    {node.topics[0]}
+                  </text>
+
+                  {/* Completed checkmark */}
+                  {isCompleted && (
+                    <text
+                      x={node.x + nodeWidth - 22}
+                      y={node.y + 22}
+                      fill="#10b981"
+                      fontSize="14"
+                    >
+                      &#10003;
+                    </text>
+                  )}
                 </g>
               );
             })}

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, BookOpen, MessageSquare, PenTool, BarChart3 } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, PenTool, BarChart3, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   { icon: MessageSquare, label: 'Tutor', href: '/tutor' },
   { icon: PenTool, label: 'Quiz', href: '/quiz' },
   { icon: BarChart3, label: 'Progress', href: '/progress' },
+  { icon: Users, label: 'Teacher', href: '/teacher' },
 ];
 
 export function BottomNav() {
