@@ -1,91 +1,167 @@
-# Welcome to Your Miaoda Project
+# EduBridge – AI Powered Study Companion
 
-## Project Info
+## Overview
 
-## Project Directory
+EduBridge is an AI powered personalised learning platform designed to help students study smarter through adaptive learning, Socratic tutoring, spaced repetition, progress tracking, and interactive study planning.
 
-```
-├── README.md # Documentation
-├── components.json # Component library configuration
-├── index.html # Entry file
-├── package.json # Package management
-├── postcss.config.js # PostCSS configuration
-├── public # Static resources directory
-│   ├── favicon.png # Icon
-│   └── images # Image resources
-├── src # Source code directory
-│   ├── App.tsx # Entry file
-│   ├── components # Components directory
-│   ├── context # Context directory
-│   ├── db # Database configuration directory
-│   ├── hooks # Common hooks directory
-│   ├── index.css # Global styles
-│   ├── layout # Layout directory
-│   ├── lib # Utility library directory
-│   ├── main.tsx # Entry file
-│   ├── routes.tsx # Routing configuration
-│   ├── pages # Pages directory
-│   ├── services # Database interaction directory
-│   ├── types # Type definitions directory
-├── tsconfig.app.json # TypeScript frontend configuration file
-├── tsconfig.json # TypeScript configuration file
-├── tsconfig.node.json # TypeScript Node.js configuration file
-└── vite.config.ts # Vite configuration file
-```
+The platform was built entirely using conversational AI development through MeDo, transforming natural language prompts into a complete full stack educational application.
 
-## Tech Stack
+EduBridge focuses on solving one major problem faced by millions of students: lack of personalised academic guidance. The system acts like a virtual tutor that helps students understand what to study, when to revise, and how to improve weak areas effectively.
 
-Vite, TypeScript, React, Supabase
+---
 
-## Development Guidelines
+# Features
 
-### How to edit code locally?
+## Personalized Study Plans
+- Automatically generates intelligent 7 day study plans
+- Arranges topics from foundational to advanced
+- Difficulty indicators:
+  - 🟢 Easy
+  - 🟡 Medium
+  - 🔴 Hard
 
-You can choose [VSCode](https://code.visualstudio.com/Download) or any IDE you prefer. The only requirement is to have Node.js and npm installed.
+## Socratic AI Tutor
+- Guides students through questions instead of directly giving answers
+- “Explain Like I’m 10” mode for beginner friendly explanations
+- Quick reply suggestions
+- Chat history persistence
 
-### Environment Requirements
+## Spaced Repetition System
+- Based on the Ebbinghaus forgetting curve
+- Automatically schedules revision sessions
+- Helps long term memory retention
 
-```
-# Node.js ≥ 20
-# npm ≥ 10
-Example:
-# node -v   # v20.18.3
-# npm -v    # 10.8.2
-```
+## Quiz & Assessment
+- AI generated quizzes
+- Timed practice sessions
+- Answer explanations
+- XP rewards and streak tracking
 
-### Installing Node.js on Windows
+## Progress Dashboard
+- Visual analytics
+- XP points
+- Learning streaks
+- Achievement badges
+- Interactive charts
 
-```
-# Step 1: Visit the Node.js official website: https://nodejs.org/, click download. The website will automatically suggest a suitable version (32-bit or 64-bit) for your system.
-# Step 2: Run the installer: Double-click the downloaded installer to run it.
-# Step 3: Complete the installation: Follow the installation wizard to complete the process.
-# Step 4: Verify installation: Open Command Prompt (cmd) or your IDE terminal, and type `node -v` and `npm -v` to check if Node.js and npm are installed correctly.
-```
+## Concept Map Visualization
+- SVG based interactive learning map
+- Clickable topic nodes
+- Prerequisite topic connections
 
-### Installing Node.js on macOS
+## Additional Features
+- Dark mode support
+- Voice input using Web Speech API
+- Wikipedia live educational summaries
+- Mobile responsive UI
+- Skeleton loading screens
+- Confetti success animations
+- Teacher and parent dashboard
 
-```
-# Step 1: Using Homebrew (Recommended method): Open Terminal. Type the command `brew install node` and press Enter. If Homebrew is not installed, you need to install it first by running the following command in Terminal:
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-Alternatively, use the official installer: Visit the Node.js official website. Download the macOS .pkg installer. Open the downloaded .pkg file and follow the prompts to complete the installation.
-# Step 2: Verify installation: Open Command Prompt (cmd) or your IDE terminal, and type `node -v` and `npm -v` to check if Node.js and npm are installed correctly.
-```
+---
 
-### After installation, follow these steps:
+# Tech Stack
 
-```
-# Step 1: Download the code package
-# Step 2: Extract the code package
-# Step 3: Open the code package with your IDE and navigate into the code directory
-# Step 4: In the IDE terminal, run the command to install dependencies: npm i
-# Step 5: In the IDE terminal, run the command to start the development server: npm run dev -- --host 127.0.0.1
-# Step 6: if step 5 failed, try this command to start the development server: npx vite --host 127.0.0.1
-```
+- MeDo (No Code AI Builder)
+- React
+- TypeScript
+- HTML5
+- CSS3
+- JavaScript
+- Vite
+- Tailwind CSS
+- Wikipedia REST API
+- Web Speech API
+- MeDo AI API
+- localStorage
+- SVG (Concept Map Visualisation)
+- React Context API
+- Custom React Hooks
+- Supabase Integration
+- PostCSS
+- pnpm Workspace
 
-### How to develop backend services?
+---
 
-Configure environment variables and install relevant dependencies.If you need to use a database, please use the official version of Supabase.
+# Project Structure
 
-## Learn More
+```bash
+├── public
+│   ├── favicon.png
+│   └── images
+│
+├── src
+│   ├── components
+│   │   ├── ConceptMap.tsx
+│   │   ├── Confetti.tsx
+│   │   ├── ReviewAlert.tsx
+│   │   └── PageSkeleton.tsx
+│   │
+│   ├── layouts
+│   ├── hooks
+│   ├── pages
+│   │   ├── Home.tsx
+│   │   ├── Onboarding.tsx
+│   │   ├── StudyPlan.tsx
+│   │   ├── AITutor.tsx
+│   │   ├── Quiz.tsx
+│   │   ├── ProgressDashboard.tsx
+│   │   └── TeacherDashboard.tsx
+│   │
+│   ├── services
+│   │   ├── planGenerator.ts
+│   │   ├── quizBank.ts
+│   │   └── wikipedia.ts
+│   │
+│   ├── store
+│   ├── types
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── routes.tsx
+│
+├── package.json
+├── tailwind.config.js
+├── vite.config.ts
+└── README.md
+Installation & Setup
+Prerequisites
+Node.js ≥ 20
+npm ≥ 10
 
-You can also check the help documentation: Download and Building the app（ [https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en](https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en)）to learn more detailed content.
+Check installation:
+
+node -v
+npm -v
+Run Locally
+Step 1 – Clone or Download Project
+git clone <repository-url>
+
+or download the ZIP file and extract it.
+
+Step 2 – Install Dependencies
+npm install
+Step 3 – Start Development Server
+npm run dev
+
+If needed:
+
+npx vite --host 127.0.0.1
+Live Demo
+
+https://app-bqx5esdqehvl.appmedo.com/
+
+Source Code
+
+https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/app-bqx5esdqehvl-2a7b364fbf3ddff57c2c533a8ccfd3c9120b59ca.zip
+
+Future Scope
+Regional language support
+Offline learning mode
+WhatsApp revision reminders
+Collaborative study rooms
+Curriculum integration
+AI powered recommendations
+Parent & teacher classroom analytics
+Vision
+
+EduBridge aims to make personalised education accessible to every student regardless of financial background. The long term goal is to provide intelligent academic guidance that feels like having a personal tutor available anytime, anywhere.
