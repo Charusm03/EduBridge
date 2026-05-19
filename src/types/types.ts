@@ -44,6 +44,17 @@ export interface MemoryTopic {
   strength: number; // 0 to 100
 }
 
+export interface Question {
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+  subject: string;
+  gradeLevel: string[];
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+}
+
 export interface AppState {
   profile: StudentProfile | null;
   studyPlan: StudyDay[] | null;
