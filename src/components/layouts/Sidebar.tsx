@@ -2,6 +2,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { Home, BookOpen, MessageSquare, PenTool, BarChart3, GraduationCap, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/store/useAppStore';
+import { Logo } from '@/components/common/Logo';
 
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
@@ -17,12 +18,8 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 h-screen bg-card border-r border-border flex flex-col shrink-0">
-      <Link to="/" className="p-6 flex items-center gap-2 group">
-        <div className="relative flex items-center justify-center w-9 h-9">
-          <BookOpen className="h-7 w-7 text-primary" />
-          <GraduationCap className="absolute -bottom-0.5 -right-0.5 h-4 w-4 text-accent" />
-        </div>
-        <span className="text-xl font-bold text-primary group-hover:opacity-80 transition-opacity">EduBridge</span>
+      <Link to="/" className="p-6 flex items-center justify-center group hover:opacity-90 transition-opacity">
+        <Logo className="w-32 h-auto text-primary" />
       </Link>
       
       <nav className="flex-1 px-4 py-4 space-y-2">
